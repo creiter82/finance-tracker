@@ -1,5 +1,5 @@
 class UserStocksController < ApplicationController
-  before_action :set_user_stock, only: [:show, :edit, :update, :destroy]
+  before_action :set_user_stock, only: [:show, :edit, :update]
 
   # GET /user_stocks
   # GET /user_stocks.json
@@ -44,7 +44,7 @@ class UserStocksController < ApplicationController
     respond_to do |format|
       if @user_stock.save
         format.html { redirect_to my_portfolio_path, 
-                      notice: "#{@user_stock.stock.ticker} was successfully added"}
+                      notice: "#{@user_stock.stock.name} (#{@user_stock.stock.ticker}) was successfully added"}
         format.json { render :show, status: :created, location: @user_stock }
       else
         format.html { render :new }
@@ -70,9 +70,10 @@ class UserStocksController < ApplicationController
   # DELETE /user_stocks/1
   # DELETE /user_stocks/1.json
   def destroy
+    @user_stock = current_user.user_stocks.where(stock_id: params[:id]).first
     @user_stock.destroy
     respond_to do |format|
-      format.html { redirect_to my_portfolio_path, notice: 'Stock was removed from portfolio' }
+      format.html { redirect_to my_portfolio_path, notice: "#{@user_stock.stock.ticker} was removed from your portfolio" }
       format.json { head :no_content }
     end
   end
