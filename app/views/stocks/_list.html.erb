@@ -23,6 +23,25 @@
                                   :class => "btn btn-xs btn-danger" %>
           </td>
         <% end %>  
+          
+        <% if current_user.can_add_stock?(user_stock.ticker) %>
+          <td>
+            <%= link_to "Add to my stocks", user_stocks_path(user: current_user, 
+                                        stock_ticker: user_stock.ticker,
+                                        stock_id: user_stock.id ? user_stock.id : ''), 
+                                        class: 'btn btn-xs btn-success', method: :post %>
+          </td>
+        <% end %>  
+        <% if @user.id != current_user.id %>
+          <% if current_user.stock_already_added?(user_stock.ticker) %>
+            <td>
+              <span class="label label-default">
+                Already added
+              </span>
+            </td>
+          <% end %>  
+          
+        <% end %>  
       </tr>
     <% end %>  
   </tbody>
